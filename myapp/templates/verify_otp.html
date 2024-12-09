@@ -1,0 +1,21 @@
+{% extends "header.html" %}
+
+{% block main %}
+<div class="flex items-center justify-center min-h-screen dark:bg-gray-900">
+    <div class="w-full max-w-md p-6 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-800">
+        <h2 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
+            Verify your OTP
+        </h2>
+        <p class="text-base font-normal text-gray-500 dark:text-gray-400">
+            Enter your OTP. We will Sent It to your Email
+        </p>
+        <form class="mt-8 space-y-6" action="#">
+            <div>
+                <label for="otp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your OTP</label>
+                <input type="otp" name="otp" id="otp" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your OTP" required="">
+            </div>            
+            <button type="submit" class="w-full px-5 py-3 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Reset password</button>
+        </form>
+    </div>
+</div>
+{% endblock main %}

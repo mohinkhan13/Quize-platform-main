@@ -1,0 +1,60 @@
+<!-- Header -->
+<div class="bg-blue-600 p-4 text-white text-center font-bold text-xl dark:bg-green-500">
+    Exam Questions
+</div>
+
+{% for q in all_questions  %}
+<!-- Question Viewer -->
+<div class="p-6 max-w-xxl mx-auto bg-white shadow-lg border dark:bg-gray-900">
+    <!-- Question Text -->
+    <div class="mb-4">
+        <h2 class="text-lg font-bold dark:text-white">{{forloop.counter}}. {{q.question}}</h2>
+    </div>
+
+    {% if q.question_type == 'MCQ' %}
+    <div class="grid grid-cols-2 gap-4">
+        <!-- Incorrect Options (transparent with border) -->
+        <button class="w-full {% if q.correct_answer == "A" %}bg-green-500 text-white {% else %}bg-transparent {% endif %} border-2 border-blue-500 font-bold py-2 px-4 dark:text-white">
+            {{q.option_a}}
+        </button>
+        <button class="w-full {% if q.correct_answer == "B" %}bg-green-500 text-white {% else %}bg-transparent {% endif %} border-2 border-blue-500 font-bold py-2 px-4 dark:text-white">
+            {{q.option_b}}
+        </button>
+        <button class="w-full {% if q.correct_answer == "C" %}bg-green-500 text-white {% else %}bg-transparent {% endif %} border-2 border-blue-500 font-bold py-2 px-4 dark:text-white">
+            {{q.option_c}}
+        </button>
+
+        <!-- Correct Option (green background) -->
+        <button class="w-full {% if q.correct_answer == "D" %}bg-green-500 text-white {% else %}bg-transparent {% endif %} border-2 border-blue-500 font-bold py-2 px-4 dark:text-white">
+            {{q.option_d}}
+        </button>
+    </div>
+    {% elif q.question_type == 'TrueFalse' %}
+    <div class="grid grid-cols-2 gap-4">
+        <button class="w-full {% if q.correct_answer == True %}bg-green-500 text-white {% else %}bg-transparent {% endif %} border-2 border-blue-500  font-bold py-2 px-4 dark:text-white">
+            True
+        </button>
+
+        <!-- Correct Option (green background) -->
+        <button class="w-full {% if q.correct_answer == False %}bg-green-500 text-white {% else %}bg-transparent {% endif %} border-2 border-blue-500  font-bold py-2 px-4 dark:text-white">
+            False
+        </button>
+    </div>
+    {% elif q.question_type == 'ShortAnswer' %}    
+        <textarea id="correct-answer" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="" readonly>{{q.correct_answer}}</textarea>
+    {% endif %}
+</div>
+
+{% endfor %}
+{% if exam.visibility == 'private' %}
+<div class="p-6 max-w-xxl mx-auto bg-white border shadow-lg dark:bg-gray-900">
+<a href="{% url "publish-exam" exam.id %}" id="submit-button" class="inline-flex items-center justify-center mt-5 mb-5 w-full px-6 py-3 text-lg font-semibold text-white bg-green-600 rounded-full shadow-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-transform transform hover:scale-105 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+    Publish Exam
+</a>
+{% else %}
+<div class="p-6 max-w-xxl mx-auto bg-white border shadow-lg dark:bg-gray-900">
+    <a href="{% url "private-exam" exam.id %}" id="submit-button" class="inline-flex items-center justify-center mt-5 mb-5 w-full px-6 py-3 text-lg font-semibold text-white bg-gray-400 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-transform transform hover:scale-105 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+        Private Exam
+    </a>
+{% endif %}
+</div>

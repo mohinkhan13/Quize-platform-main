@@ -1,0 +1,112 @@
+{% if exam.number_of_questions is not None %}
+{% load custom_tags %}
+<form class="" method='POST' action="{% url "create-questions" exam.id%}">
+    {% csrf_token %}
+        
+      {% if exam.exam_type == 'MCQ' %}
+      {% for i in number_of_questions|range_filter %}
+          <div class="mb-6 border p-4 rounded-md shadow-md bg-white dark:bg-gray-800">
+              <h3 class="text-lg font-semibold mb-2 dark:text-white">Question {{ forloop.counter }}</h3>
+              <div class="relative z-0 w-full mb-5">
+                  <input type="text" id="question-text" name="question_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Enter Your Question" required />
+              </div>
+
+              <!-- Options -->
+              <div class="grid grid-cols-2 gap-6">
+                  <div class="relative z-0 w-full mb-5">
+                      <input type="text" id="option-a_{{ forloop.counter }}" name="option_a_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option A" required />
+                  </div>
+                  <div class="relative z-0 w-full mb-5">
+                      <input type="text" id="option-b_{{ forloop.counter }}" name="option_b_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option B" required />
+                  </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-6">
+                  <div class="relative z-0 w-full mb-5">
+                      <input type="text" id="option-c_{{ forloop.counter }}" name="option_c_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option C" required />
+                  </div>
+                  <div class="relative z-0 w-full mb-5">
+                      <input type="text" id="option-d_{{ forloop.counter }}" name="option_d_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option D" required />
+                  </div>
+              </div>
+
+              <!-- Dropdown -->
+              <div class="relative z-0 w-full mb-5">
+                  <select id="correct-answer_{{ forloop.counter }}" name="correct_answer_{{ forloop.counter }}" class="bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200">
+                      <option selected>Choose Correct Answer</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                  </select>
+              </div>
+          </div>
+      {% endfor %}
+
+      {% elif exam.exam_type == 'TF' %}
+        {% for i in number_of_questions|range_filter %}
+        <div class="mb-6 border p-4 rounded-md shadow-md bg-white dark:bg-gray-800">
+            <h3 class="text-lg font-semibold mb-2 dark:text-white">Question {{ forloop.counter }}</h3>
+            <div class="relative z-0 w-full mb-5">
+                <input type="text" id="question-text_{{ forloop.counter }}" name="tf-question_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Enter Your Question" required />
+            </div>
+
+            <!-- Dropdown for Correct Answer -->
+            <div class="relative z-0 w-full mb-5">
+                <select id="correct-answer_{{ forloop.counter }}" name="tf-correct-answer_{{ forloop.counter }}" class="bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200">
+                    <option selected>Choose Correct Answer</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                </select>
+            </div>
+        </div>
+        {% endfor %}
+
+
+      {% elif exam.exam_type == 'SA' %}
+        {% for i in number_of_questions|range_filter %}
+        <div class="mb-6 border p-4 rounded-md shadow-md bg-white dark:bg-gray-800">
+            <h3 class="text-lg font-semibold mb-2 dark:text-white">Question {{ forloop.counter }}</h3>
+            <div class="relative z-0 w-full mb-5">
+                <input type="text" id="question-text" name="sa-question_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Enter Your Question" required />
+            </div>
+
+            <div class="relative z-0 w-full mb-5">
+                <textarea id="correct-answer" name="sa-correct-answer_{{ forloop.counter }}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Correct Answer" required></textarea>
+            </div>
+        </div>
+        {% endfor %}
+      
+      {% elif exam.exam_type == 'MX' %}
+        <div id="warning-message" style="display: none; color: red; font-weight: bold;">
+            Total number of questions is {{exam.number_of_questions}} cannot exceed.
+        </div>
+        <h1 class="text-lg text-gray-700 dark:text-white py-4 px-2">Mixed Type Questions</h1>
+
+        <!-- Input for number of MCQs -->
+        <div class="relative z-0 w-full py-4 px-2">
+            <input type="number" id="mcq-count" name="mcq_count" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Enter the number of MCQ questions" required />
+        </div>
+
+        <!-- Input for number of True/False -->
+        <div class="relative z-0 w-full py-4 px-2">
+            <input type="number" id="tf-count" name="tf_count" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Enter the number of True/False questions" required />
+        </div>
+
+        <!-- Container for MCQs -->
+        <div id="mcq-container" class="space-y-4"></div>
+
+        <!-- Container for True/False questions -->
+        <div id="tf-container" class="space-y-4"></div>
+
+      {% endif %}
+
+      <!-- Submit Button -->
+      <button type="submit" id="submit-button" class="inline-flex items-center justify-center w-full px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-transform transform hover:scale-105 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+          Submit Questions
+      </button>
+
+      </form>
+      {% else %}
+    <p>No questions available for this exam.</p>
+{% endif %}

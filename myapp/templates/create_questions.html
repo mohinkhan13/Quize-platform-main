@@ -1,0 +1,148 @@
+{% extends "header.html" %}
+{% load custom_tags %}
+{% block main %}
+<div class="max-w-3xl mx-auto p-8 mb-10 bg-white border border-gray-300 rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-900">
+    <div class="flex flex-col items-center text-center space-y-8">        
+        <!-- Exam Name -->
+        <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-800 dark:text-white tracking-tight">
+            {{exam.exam_name}}({{exam.exam_type}})
+        </h3>
+        
+        <!-- Exam Subject -->
+        <p class="text-md sm:text-lg font-medium text-gray-500 dark:text-gray-300">
+            {{exam.exam_subject}}
+        </p>
+
+        <!-- Buttons Container -->
+        <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-6">
+            <!-- Total Questions Button -->
+            <button type="button" class="inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 text-md sm:text-lg font-semibold text-white bg-indigo-600 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 transition-transform transform hover:scale-105">
+                <i class="fas fa-list-ul mr-2"></i> Total Questions: {{exam.number_of_questions}}
+            </button>
+            
+            <!-- Time Button -->
+            <button type="button" class="inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 text-md sm:text-lg font-semibold text-white bg-red-600 rounded-full shadow-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-700 dark:hover:bg-red-600 dark:focus:ring-red-800 transition-transform transform hover:scale-105">
+                <i class="fas fa-clock mr-2"></i> Time: {{exam.exam_time|format_time}}            </button>
+        </div>
+    </div>
+</div>
+
+<div class="relative min-h-screen flex items-center justify-center ">
+    <!-- Card Container -->
+    <div class="w-full max-w-2xl bg-white bg-opacity-30 backdrop-blur-lg rounded-3xl shadow-lg border border-gray-300 transform transition duration-500 hover:scale-105 dark:bg-gray-900 dark:border-gray-900">
+      
+
+    {% if exam.question_created == False %}
+        {% include "add_questions_card.html" %}
+    {% elif  exam.question_created == True %}
+        {% include "view_questions.html" %}
+    {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mcqCountInput = document.getElementById('mcq-count');
+        const tfCountInput = document.getElementById('tf-count');
+        const mcqContainer = document.getElementById('mcq-container');
+        const tfContainer = document.getElementById('tf-container');
+        const maxQuestions = {{ exam.number_of_questions }}; // Dynamic value from the server
+        const warningMessage = document.getElementById('warning-message'); // Assume you have an element to show messages
+
+        // Function to update the warning message visibility
+        const updateWarningMessage = (isVisible) => {
+            warningMessage.style.display = isVisible ? 'block' : 'none';
+        };
+
+        // Generate MCQ questions based on input
+        mcqCountInput.addEventListener('input', function() {
+            const mcqCount = parseInt(mcqCountInput.value, 10) || 0;
+            const tfCount = parseInt(tfCountInput.value, 10) || 0;
+            const totalCount = mcqCount + tfCount;
+
+            mcqContainer.innerHTML = '';
+
+            if (totalCount > maxQuestions) {
+                updateWarningMessage(true);
+                return; // Exit if the total exceeds the maximum
+            } else {
+                updateWarningMessage(false);
+            }
+
+            for (let i = 1; i <= mcqCount; i++) {
+                const mcqHTML = `
+                <div class="mb-6 border p-4 rounded-md shadow-md bg-white dark:bg-gray-800">
+                    <h3 class="text-lg font-semibold mb-2 dark:text-white">MCQ Question ${i}</h3>
+                    <div class="relative z-0 w-full mb-5">
+                        <input type="text" id="mcq-question_${i}" name="question_${i}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Enter Your MCQ Question" required />
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="relative z-0 w-full mb-5">
+                            <input type="text" id="mcq-option-a_${i}" name="option_a_${i}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option A" required />
+                        </div>
+                        <div class="relative z-0 w-full mb-5">
+                            <input type="text" id="mcq-option-b_${i}" name="option_b_${i}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option B" required />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="relative z-0 w-full mb-5">
+                            <input type="text" id="mcq-option-c_${i}" name="option_c_${i}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option C" required />
+                        </div>
+                        <div class="relative z-0 w-full mb-5">
+                            <input type="text" id="mcq-option-d_${i}" name="option_d_${i}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Option D" required />
+                        </div>
+                    </div>
+                    <div class="relative z-0 w-full mb-5">
+                        <select id="mcq-correct-answer_${i}" name="correct_answer_${i}" class="bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200">
+                            <option selected>Choose Correct Answer</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                </div>`;
+
+                mcqContainer.innerHTML += mcqHTML;
+                console.log("Generated MCQ HTML:", mcqHTML);
+            }
+        });
+
+        // Generate True/False questions based on input
+        tfCountInput.addEventListener('input', function() {
+            const tfCount = parseInt(tfCountInput.value, 10) || 0;
+            const mcqCount = parseInt(mcqCountInput.value, 10) || 0;
+            const totalCount = mcqCount + tfCount;
+
+            tfContainer.innerHTML = '';
+
+            if (totalCount > maxQuestions) {
+                updateWarningMessage(true);
+                return; // Exit if the total exceeds the maximum
+            } else {
+                updateWarningMessage(false);
+            }
+
+            for (let i = 1; i <= tfCount; i++) {
+                const tfHTML = `
+                    <div class="mb-6 border p-4 rounded-md shadow-md bg-white dark:bg-gray-800">
+                        <h3 class="text-lg font-semibold mb-2 dark:text-white">True/False Question ${i}</h3>
+                        <div class="relative z-0 w-full mb-5">
+                            <input type="text" id="tf-question_${i}" name="tf-question_${i}" class="peer bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200" placeholder="Enter Your True/False Question" required />
+                        </div>
+                        <div class="relative z-0 w-full mb-5">
+                            <select id="tf-correct-answer_${i}" name="tf-correct-answer_${i}" class="bg-transparent border-b-2 border-gray-300 text-gray-900 dark:text-white focus:outline-none focus:border-blue-600 block w-full p-2.5 appearance-none transition duration-200">
+                                <option selected>Choose Correct Answer</option>
+                                <option value="True">True</option>
+                                <option value="False">False</option>
+                            </select>
+                        </div>
+                    </div>`;
+
+                tfContainer.innerHTML += tfHTML;
+                console.log("Generated TF HTML:", tfHTML);
+            }
+        });
+    });
+</script>
+{% endblock %}

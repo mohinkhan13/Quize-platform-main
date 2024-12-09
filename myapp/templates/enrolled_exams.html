@@ -1,0 +1,40 @@
+{% extends "header.html" %}
+
+{% block main %}
+{% load custom_tags %}
+
+<div class="overflow-x-auto w-full">
+    <table class="min-w-full w-full table-auto divide-y divide-gray-200 dark:divide-gray-600">
+        <thead class="bg-gray-100 dark:bg-gray-700">
+            <tr>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Exam Name</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Attemt No</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Questions</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Date</th>
+                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Score</th>            
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+            {% if results %}
+                {% for r in results %}
+                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onclick="location.href='{% url 'results_view' r.id %}'">                    
+                    <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400">{{ r.exam.exam_name }}</td>
+                    
+                    <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ r.attempt_no }}</td>
+                    <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ r.exam.number_of_questions }}</td>
+                    <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ r.date_taken }}</td>
+                    <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ r.score }}</td>
+                </tr>      
+                {% endfor %}      
+            {% else %}
+            <tr>
+                <td colspan="8" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                    You Are Not Enrolled in any exam.
+                </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock main %}

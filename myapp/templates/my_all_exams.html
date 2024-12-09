@@ -1,0 +1,174 @@
+{% extends "header.html" %}
+
+{% block main %}
+{% load custom_tags %}
+<div class="p-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4">My All Exams</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+        <form class="max-w-md w-full" action="#" method="GET">   
+            <label for="exam-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="search" id="exam-search" name="search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for Exams..." required />
+                <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+            </div>
+        </form>
+        
+        <a href="{% url 'create-exam' %}" class="mt-4 sm:mt-0 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none w-full sm:w-auto">Add New Exam</a>
+    </div>
+
+    <div class="hidden sm:block">
+        <!-- Table for larger screens -->
+        <div class="overflow-x-auto w-full">
+            <table class="min-w-full w-full table-auto divide-y divide-gray-200 dark:divide-gray-600">
+                <thead class="bg-gray-100 dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Status</th>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Exam Name</th>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Subject</th>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Type</th>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Questions</th>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Time</th>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Visibility</th>
+                        <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                    {% if page_obj %}
+                        {% for e in page_obj %}
+                        <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onclick="location.href='{% url 'create-questions' e.id %}'">
+                            <td class="p-4 text-base font-medium text-gray-900 dark:text-white">
+                                {% if e.visibility == 'private' %}
+                                <a href="{% url 'publish-exam' e.id %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 hover:bg-green-800 rounded-lg">Publish</a>
+                                {% else %}
+                                <a href="{% url 'private-exam' e.id %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-700 hover:bg-green-800 rounded-lg">Private</a>
+                                {% endif %}
+                            </td>
+                            <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400">{{ e.exam_name }}</td>
+                            <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ e.exam_subject }}</td>
+                            <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ e.exam_type }}</td>
+                            <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ e.number_of_questions }}</td>
+                            <td class="p-4 text-base font-medium text-gray-900 dark:text-white">{{ e.exam_time|format_time }}</td>
+                            <td class="p-4 text-base font-medium text-gray-900 dark:text-white">
+                                <span class="{% if e.visibility == 'private' %}bg-gray-400{% else %}bg-green-400{% endif %} text-white p-1">{{ e.visibility }}</span>
+                            </td>
+                            <td class="p-4 space-x-2 flex items-center">
+                                <a href="#" class="px-3 py-2 text-sm font-medium text-center text-white bg-yellow-300 hover:bg-yellow-400 rounded-lg">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'delete-exam' e.id %}" class="px-3 py-2 text-sm font-medium text-center text-white bg-red-700 hover:bg-red-800 rounded-lg">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                No exams found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                            No exams available.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Card layout for smaller screens -->
+<div class="sm:hidden">
+    {% if page_obj %}
+        {% for e in page_obj %}
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-4 transition-transform transform hover:scale-105 dark:bg-gray-800">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-lg font-semibold text-gray-900 dark:text-white">{{ e.exam_name }}</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                    {% if e.visibility == 'private' %}
+                    <span class="bg-gray-400 text-white p-1 rounded">Private</span>
+                    {% else %}
+                    <span class="bg-green-500 text-white p-1 rounded">Published</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-sm text-gray-600 dark:text-gray-300">Subject: <span class="font-medium">{{ e.exam_subject }}</span></div>
+            <div class="text-sm text-gray-600 dark:text-gray-300">Type: <span class="font-medium">{{ e.exam_type }}</span></div>
+            <div class="text-sm text-gray-600 dark:text-gray-300">Questions: <span class="font-medium">{{ e.number_of_questions }}</span></div>
+            <div class="text-sm text-gray-600 dark:text-gray-300">Time: <span class="font-medium">{{ e.exam_time|format_time }}</span></div>
+            <div class="mt-4 flex space-x-3">
+                <a href="{% url 'create-questions' e.id %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-150 ease-in-out rounded-lg shadow hover:shadow-lg">View Questions</a>
+                <a href="{% url 'delete-exam' e.id %}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition duration-150 ease-in-out rounded-lg shadow hover:shadow-lg">Delete</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center text-gray-500 dark:text-gray-400">No exams found.</div>
+        {% endfor %}
+    {% else %}
+    <div class="text-center text-gray-500 dark:text-gray-400">No exams available.</div>
+    {% endif %}
+</div>
+
+</div>
+
+<div class="sticky bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex items-center mb-4 sm:mb-0">
+        <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white {% if not page_obj.has_previous %}disabled{% endif %}">
+            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+        </a>
+        <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" class="inline-flex justify-center p-1 mr-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white {% if not page_obj.has_next %}disabled{% endif %}">
+            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+        </a>
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Showing <span class="font-semibold text-gray-900 dark:text-white">{{ page_obj.start_index }}</span> to <span class="font-semibold text-gray-900 dark:text-white">{{ page_obj.end_index }}</span> of <span class="font-semibold text-gray-900 dark:text-white">{{ page_obj.paginator.count }}</span></span>
+    </div>
+    <div class="flex items-center space-x-3">
+        <nav aria-label="Page navigation example">
+            <ul class="inline-flex -space-x-px text-sm">
+                {% if page_obj.has_previous %}
+                <li>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                </li>
+                {% else %}
+                <li>
+                    <span class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-white border border-e-0 border-gray-300 rounded-s-lg">Previous</span>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li>
+                        <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">{{ num }}</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="?page={{ num }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li>
+                    <a href="?page={{ page_obj.next_page_number }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                </li>
+                {% else %}
+                <li>
+                    <span class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-white border border-gray-300 rounded-e-lg">Next</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+{% endblock %}

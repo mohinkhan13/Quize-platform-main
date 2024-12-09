@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Quiz Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <link href="{% static 'css/start-exam.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="timer-card" id="timer">{{ exam_time }}</div>
+
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <div class="progress-bar">
+                <div class="progress" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <div class="quiz-body">
+            <div class="quiz-question">Question</div>
+            <div class="options-container">
+                <div class="option-grid"></div>
+                <div class="quiz-image">
+                    <img src="{% static 'img/start_exam.png' %}" alt="Quiz Image">
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-footer">
+            <div class="question-number" id="question-number">1/{{ total_questions }}</div>
+            <button class="next-btn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        const examId = {{ exam.id }};
+        const totalQuestions = {{ total_questions }};
+        const timeSetting = '{{ time_setting }}';
+        let userAnswers = {};
+        let timeLeft;
+
+        $(document).ready(function() {
+            const examTime = '{{ exam_time }}';
+            const timeParts = examTime.split(':');
+            timeLeft = parseInt(timeParts[0]) * 3600 + parseInt(timeParts[1]) * 60 + parseInt(timeParts[2]);
+
+            loadQuestion(currentQuestionIndex);
+            startTimer();
+
+            $('.next-btn').on('click', function() {
+                if (!$('.options-container .option-card.selected').length) {
+                    alert('Please select an answer before proceeding.');
+                    return;
+                }
+
+                saveUserAnswer();
+
+                if (currentQuestionIndex === totalQuestions - 1) {
+                    submitAnswers();
+                } else {
+                    if (timeSetting === 'question') {
+                        resetTimer();
+                    }
+                    currentQuestionIndex++;
+                    loadQuestion(currentQuestionIndex);
+                }
+            });
+        });
+
+        function loadQuestion(index) {
+            $.ajax({
+                url: `/quiz/get_question/${examId}/${index}/`,
+                method: 'GET',
+                success: function(data) {
+                    currentQuestionId = data.id;  // Set currentQuestionId from the response
+                    updateQuestionDisplay(data, index);
+                },
+                error: function(error) {
+                    console.error("Error fetching question:", error);
+                }
+            });
+        }
+        
+
+        function updateQuestionDisplay(data, index) {
+            $('.quiz-question').text(data.question);
+            $('.options-container .option-grid').empty();
+            $('#question-number').text(`${index + 1}/${totalQuestions}`);
+        
+            // Logic to display options based on question type
+            if (data.type === 'MCQ') {
+                for (let option of ['A', 'B', 'C', 'D']) {
+                    $('.options-container .option-grid').append(`
+                        <div class="option-card" data-value="${option}">
+                            <div class="option-label">${option}</div>
+                            <div class="option-text">${data.options[option.toLowerCase()]}</div>
+                        </div>
+                    `);
+                }
+            } else if (data.type === 'TrueFalse') {
+                $('.options-container .option-grid').append(`
+                    <div class="option-card" data-value="True">
+                        <div class="option-label">A</div>
+                        <div class="option-text">True</div>
+                    </div>
+                    <div class="option-card" data-value="False">
+                        <div class="option-label">B</div>
+                        <div class="option-text">False</div>
+                    </div>
+                `);
+            } else if (data.type === 'ShortAnswer') {
+                $('.options-container .option-grid').append(`
+                    <div class="option-card">
+                        <div class="option-text">${data.question}</div>
+                    </div>
+                `);
+            }
+        
+            $('.next-btn').text(index === totalQuestions - 1 ? 'Submit' : 'Next');
+        }
+        
+
+        function saveUserAnswer() {
+            const selectedValue = $('.options-container .option-card.selected').data('value');
+            if (selectedValue) {
+                // Use the actual question ID instead of currentQuestionIndex
+                userAnswers[currentQuestionId] = selectedValue; // currentQuestionId should be set in loadQuestion
+            }
+        }
+
+        $(document).on('click', '.option-card', function() {
+            $('.option-card').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
+        function startTimer() {
+            const timerInterval = setInterval(function() {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time is up! Loading next question...");
+                    currentQuestionIndex++;
+                    loadQuestion(currentQuestionIndex);
+                    resetTimer();
+                } else {
+                    updateTimerDisplay();
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            $('#timer').text(`${minutes}:${seconds < 10 ? '0' + seconds : seconds}`);
+        }
+
+        function resetTimer() {
+            const examTime = '{{ exam_time }}';
+            const timeParts = examTime.split(':');
+            timeLeft = parseInt(timeParts[0]) * 3600 + parseInt(timeParts[1]) * 60 + parseInt(timeParts[2]);
+            updateTimerDisplay();
+        }
+
+        function submitAnswers() {
+            const answersData = JSON.stringify(userAnswers); // Send user answers as JSON
+            console.log("Submitting answers:", answersData);  // Log the data being sent
+            $.ajax({
+                url: `/quiz/submit/${examId}/`, 
+                method: 'POST',
+                data: {
+                    answers: answersData,
+                    csrfmiddlewaretoken: '{{ csrf_token }}' // Include CSRF token for security
+                },
+                success: function(response) {
+                    // Redirect to results page after submission
+                    window.location.href = `/quiz/results/${response.result_id}/`; // Update with your results URL
+                },
+                error: function(error) {
+                    console.error("Error submitting answers:", error);
+                    alert('There was an error submitting your answers. Please try again.');
+                }
+            });
+        }
+        
+    </script>
+</body>
+</html>

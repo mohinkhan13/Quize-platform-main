@@ -1,0 +1,134 @@
+/* Base styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Container for results */
+.results-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+h1 {
+    text-align: center;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* Result Card */
+.result-card {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.result-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.result-card p {
+    margin: 8px 0;
+    color: #555;
+}
+
+.score, .percentage {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Grade styling */
+.grade {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Status label */
+.status-label {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.status-label.passed {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-label.failed {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Answer Summary */
+.answer-summary h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.answer-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #f4f6f9;
+}
+
+.correct {
+    border-left: 5px solid #28a745;
+}
+
+.incorrect {
+    border-left: 5px solid #dc3545;
+}
+
+.selected-answer, .correct-answer {
+    margin-top: 10px;
+}
+
+.correct-label {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.incorrect-label {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Back button */
+.back-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}

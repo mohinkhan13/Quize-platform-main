@@ -1,0 +1,350 @@
+.exam-details-card {
+    max-width: 100%;
+    background: #ffffff;
+    border-radius: 1.5em;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 3em 2em;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #eaeaea; /* Soft border */
+    opacity: 0; /* Start hidden for animation */
+    transform: translateY(20px); /* Start slightly lower for effect */
+    animation: fadeInUp 0.6s forwards; /* Animation for fade-in effect */
+}
+
+/* Keyframes for fade-in effect */
+@keyframes fadeInUp {
+    to {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* Original position */
+    }
+}
+
+.exam-header {
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+.exam-header h1 {
+    font-size: 2.5em;
+    color: #2E3C40;
+    margin: 0;
+    font-weight: bold;
+    animation: slideIn 0.5s forwards; /* Slide-in animation for the title */
+}
+
+/* Keyframes for slide-in effect */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px); /* Start above */
+        opacity: 0; /* Start hidden */
+    }
+    to {
+        transform: translateY(0); /* End at original position */
+        opacity: 1; /* Fully visible */
+    }
+}
+
+.exam-header h2 {
+    color: #627084;
+    font-size: 1.4em;
+    text-transform: uppercase;
+    margin: 0.5em 0;
+    animation: slideIn 0.5s forwards; /* Slide-in animation for the subtitle */
+    animation-delay: 0.1s; /* Delay for subtitle */
+}
+
+.exam-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5em;
+    animation: fadeIn 0.5s forwards; /* Fade-in animation for rating */
+    animation-delay: 0.2s; /* Delay for rating */
+}
+
+.star-icon {
+    font-size: 1.8em;
+    color: #FFD700;
+    
+}
+
+.feedback-count {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    color: #627084;
+    margin-left: 0.5em; /* Space between stars and feedback count */
+}
+
+.exam-description {
+    color: #4A4A4A;
+    line-height: 1.6;
+    margin-bottom: 2em;
+    text-align: justify;
+    font-size: 1.1em; /* Increased font size for readability */
+    animation: fadeIn 0.5s forwards; /* Fade-in animation for description */
+    animation-delay: 0.3s; /* Delay for description */
+}
+
+.info-section {
+    display: flex;
+    justify-content: space-around; /* Space out info sections */
+    margin: 1.5em 0;
+    padding: 1em;
+    border-radius: 0.5em;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s forwards; /* Fade-in animation for info section */
+    animation-delay: 0.4s; /* Delay for info section */
+}
+
+.info-section div {
+    flex: 1;
+    text-align: center;
+    color: #627084;
+    font-size: 1.1em; /* Increased font size */
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+    animation: fadeIn 0.5s forwards; /* Fade-in animation for buttons */
+    animation-delay: 0.5s; /* Delay for buttons */
+}
+
+.action-button {
+    background-color: #753BBD;
+    color: white;
+    padding: 0.8em 2.5em;
+    border-radius: 0.5em;
+    text-decoration: none;
+    margin: 0 1em;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.action-button:hover {
+    background-color: #A754C4;
+    transform: translateY(-2px);
+}
+
+.back-button {
+    background-color: #f5f5f5;
+    color: #753BBD;
+}
+
+.back-button:hover {
+    background-color: #eaeaea;
+    transform: translateY(-2px);
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5em;
+}
+
+.social-button {
+    font-size: 1.5em;
+    color: #753BBD;
+    margin: 0 1em;
+    transition: color 0.3s;
+}
+
+.social-button:hover {
+    color: #A754C4;
+}
+
+.feedback-section {
+    margin-top: 2.5em;
+    border-top: 2px solid #eaeaea;
+    padding-top: 2em;
+}
+
+.feedback-section h3 {
+    color: #2E3C40;
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.feedback {
+    margin-bottom: 1.5em;
+    border: 1px solid #eaeaea;
+    border-radius: 0.5em;
+    padding: 1em;
+    background: #f9f9f9;
+}
+
+.feedback strong {
+    color: #627084;
+}
+
+.recommendations-section {
+    margin-top: 2.5em;
+}
+
+.recommendations-section h3 {
+    color: #2E3C40;
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.recommendations-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+}
+
+.recommendations-section {
+    margin: 2em 0; /* Adds space around the section */
+    padding: 1em;
+    background-color: #f9f9f9; /* Light background for contrast */
+    border-radius: 1em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.recommendations-section h3 {
+    text-align: center;
+    font-size: 2em;
+    color: #2E3C40;
+    margin-bottom: 1.5em; /* Space below the heading */
+}
+
+.recommendations-list {
+    display: flex;
+    flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+    justify-content: center; /* Center cards */
+    gap: 1.5em; /* Space between cards */
+}
+
+.recommendation-card {
+    background: #ffffff; /* Card background */
+    border-radius: 0.5em; /* Rounded corners */
+    padding: 1.5em;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 0 1 calc(30% - 1em); /* Responsive width */
+    max-width: 300px; /* Max width for cards */
+}
+
+.recommendation-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.recommendation-card h4 {
+    font-size: 1.5em;
+    color: #2E3C40;
+    margin-bottom: 0.5em; /* Space below the title */
+}
+
+.recommendation-card p {
+    color: #627084; /* Text color for duration */
+    margin-bottom: 1em; /* Space below the duration */
+}
+
+.action-button {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background-color: #753BBD; /* Button color */
+    color: white; /* Button text color */
+    border-radius: 0.5em;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #A754C4; /* Lighter button color on hover */
+}
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Hide the modal */
+.hidden {
+    display: none;
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .exam-details-card {
+        padding: 2em 1em; /* Adjust padding for smaller screens */
+    }
+
+    .exam-header h1 {
+        font-size: 2.2em; /* Smaller font size */
+    }
+
+    .exam-header h2 {
+        font-size: 1.2em; /* Smaller font size */
+    }
+
+    .star-icon {
+        font-size: 1.5em; /* Smaller star size */
+    }
+    .action-buttons {            
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        
+    }
+    .action-button {            
+        font-size: 1em; /* Smaller button text */
+        
+    }
+
+    .recommendation-card {            
+        min-width: 300px; /* Max width for cards */
+    }
+    .info-section {
+        flex-direction:column;            
+    }
+    .info-section div{
+        padding:10px;
+    }
+}

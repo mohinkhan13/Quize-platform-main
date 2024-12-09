@@ -1,0 +1,158 @@
+{% extends 'header.html' %}
+
+{% block main %}
+{% load custom_tags %}
+{%load static%}
+<link rel="stylesheet" href="{% static "css/view-exam.css" %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<section class="page-contain ">
+    <div class="exam-details-card dark:bg-gray-800 dark:border-gray-800">
+        <p class="absolute bg-green-400 text-white p-1 "> <strong> @{{exam.user.username}} </strong></p>
+        <div class="exam-header">
+            <h1 class="dark:text-white">{{ exam.exam_name }} 
+                {% if exam.exam_type == 'MCQ' %}
+                (MCQ)
+                {% elif exam.exam_type == 'TF' %}
+                (True/False)
+                {% elif exam.exam_type == 'SA' %}
+                (Short Answer)
+                {% elif exam.exam_type == 'MX' %}
+                (MCQ and True/False)
+                {% endif %}
+                
+            </h1>
+            <h2>{{ exam.exam_subject }}</h2>
+        </div>
+
+        <!-- Rating -->
+        <div class="exam-rating">
+            <!-- Star icons -->
+            <span class="star-icon">⭐</span>
+            <span class="star-icon">⭐</span>
+            <span class="star-icon">⭐</span>
+            <span class="star-icon">⭐</span>
+            <span class="star-icon">⭐</span>            
+        </div>
+        <span class="feedback-count">(25 Reviews)</span>
+        <div class="info-section dark:bg-gray-700">
+            <div class="dark:text-white">
+                <strong>Duration:</strong><br>
+                {{exam.exam_time | format_time}}
+            </div>
+            <div class="dark:text-white">
+                <strong>Total Questions:</strong><br>
+                {{exam.number_of_questions}}
+            </div>
+            <div class="dark:text-white">
+                <strong>Difficulty:</strong><br>
+                {{exam.difficulty}}
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="#" class="action-button" id="start-exam-btn">Start Exam</a>
+            <a href="{% url "all-exams" %}" class="action-button back-button">Back to Exams</a>
+        </div>
+        <div id="confirmation-modal" class="modal">
+            <div class="modal-content">
+                <p>Are you ready for the challenge?</p>
+                <div class="modal-buttons">
+                    <button id="yes-btn" class="modal-btn">Yes</button>
+                    <button id="no-btn" class="modal-btn">No</button>
+                </div>
+            </div>
+        </div>
+        <div class="social-buttons">
+            <a href="#" class="social-button"><i class="fab fa-facebook-square"></i></a>
+            <a href="#" class="social-button"><i class="fab fa-twitter-square"></i></a>
+            <a href="#" class="social-button"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-button"><i class="fab fa-whatsapp-square"></i></a>
+        </div>
+
+        <div class="info-section dark:bg-gray-700">
+            <div class="dark:text-white">
+                <strong>Enroll</strong><br>
+                {{total_enrollment}}
+            </div>
+            <div class="dark:text-white">
+                <strong>Completion Rate:</strong><br>
+                {{complation_rate}}%
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="#" class="action-button">Invite Friends</a>
+        </div>
+
+        <div class="feedback-section">
+            <h3 class="dark:text-white">User Feedback</h3>
+            <div class="feedback dark:bg-gray-700 dark:text-white">
+                <strong class="dark:text-green-400">John Doe </strong> Great exam, really challenging!
+            </div>
+            <div class="feedback dark:bg-gray-700 dark:text-white">
+                <strong class="dark:text-green-400">Jane Smith </strong> I learned a lot, very informative.
+            </div>
+            <div class="feedback dark:bg-gray-700 dark:text-white">
+                <strong class="dark:text-green-400">Mike Johnson </strong> Excellent questions, very well structured.
+            </div>
+        </div>
+
+        <div class="recommendations-section dark:bg-gray-800">
+            <h3 class="dark:text-white">Recommended Exams</h3>
+            <div class="recommendations-list">
+                <div class="recommendation-card dark:bg-gray-700">
+                    <h4 class="dark:text-white">Math Exam</h4>
+                    <p class="dark:text-gray-400">Duration: 45 mins</p>
+                    <a href="#" class="action-button">View exam</a>
+                </div>
+                <div class="recommendation-card dark:bg-gray-700">
+                    <h4 class="dark:text-white">Science Exam</h4>
+                    <p class="dark:text-gray-400">Duration: 60 mins</p>
+                    <a href="#" class="action-button">View exam</a>
+                </div>
+                <div class="recommendation-card dark:bg-gray-700">
+                    <h4 class="dark:text-white">History Exam</h4>
+                    <p class="dark:text-gray-400">Duration: 50 mins</p>
+                    <a href="#" class="action-button">View exam</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    // Get the modal element
+const modal = document.getElementById("confirmation-modal");
+
+// Get the button that opens the modal
+const startExamBtn = document.getElementById("start-exam-btn");
+
+// Get the Yes and No buttons
+const yesBtn = document.getElementById("yes-btn");
+const noBtn = document.getElementById("no-btn");
+
+// When the user clicks the "Start Exam" button, open the modal
+startExamBtn.onclick = function (event) {
+    event.preventDefault(); // Prevent the default action of the link
+    modal.style.display = "block";
+}
+const enrollUrl = "{% url 'enroll-exam' exam.id %}"; // Dynamically set URL
+// When the user clicks "Yes", redirect to the exam page
+yesBtn.onclick = function () {
+    window.location.href = enrollUrl ;// Replace with your exam start URL
+}
+
+// When the user clicks "No", close the modal
+noBtn.onclick = function () {
+    modal.style.display = "none";
+}
+
+// Optionally, close the modal when clicking outside of it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+</script>
+{% endblock %}
